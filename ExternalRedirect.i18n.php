@@ -1,6 +1,6 @@
 <?php
 /* ExternalRedirect - MediaWiki extension to allow redirects to external sites.
- * Copyright (C) 2013 Davis Mosenkovs
+ * Copyright (C) 2013-2022 Davis Mosenkovs
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +24,7 @@ $messages['en'] = array(
     'externalredirect-invalidurl' => '== ExternalRedirect Error ==
 Redirection URL is invalid.',
     'externalredirect-denied' => '== ExternalRedirect Error ==
-External redirection is not enabled for this namespace or page.',
+External redirection is not enabled for this namespace, page or URL.',
     'externalredirect-denied-url' => 'Intended redirection URL: [$1 $1]',
 );
 

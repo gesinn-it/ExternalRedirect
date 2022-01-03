@@ -1,6 +1,6 @@
 <?php
 /* ExternalRedirect - MediaWiki extension to allow redirects to external sites.
- * Copyright (C) 2013 Davis Mosenkovs
+ * Copyright (C) 2013-2022 Davis Mosenkovs
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ $wgExtensionCredits[ 'parserhook' ][] = array(
     'author' => 'Davis Mosenkovs',
     'url' => 'https://www.mediawiki.org/wiki/Extension:ExternalRedirect',
     'description' => 'Allows to make redirects to external websites',
-    'version' => '1.0.2',
+    'version' => '1.2.0',
 );
 
 $wgExtensionMessagesFiles['ExternalRedirect'] = dirname( __FILE__ ) . '/ExternalRedirect.i18n.php';
@@ -38,6 +38,9 @@ $wgExternalRedirectNsIDs = array();
 
 // Better avoid. Array with page names (see magic word {{FULLPAGENAME}}) where external redirection should be allowed.
 $wgExternalRedirectPages = array();
+
+// Avoid or be extremely careful. Use whitelisting approach and very precise expressions. PCRE regex used to determine whether redirection to particular target URL is allowed.
+$wgExternalRedirectURLRegex = '';
 
 // Whether to display link to redirection URL (along with error message) in case externalredirect is used where it is not allowed.
 $wgExternalRedirectDeniedShowURL = false;
@@ -51,13 +54,14 @@ function wfExternalRedirectParserInit( Parser $parser ) {
 }
 
 function wfExternalRedirectRender($parser, $url = '') {
-    global $wgExternalRedirectNsIDs, $wgExternalRedirectPages, $wgExternalRedirectDeniedShowURL;
-    $parser->disableCache();
-    if(!wfParseUrl($url) || strpos($url, chr(13))!==false || strpos($url, chr(10))!==false) {
+    global $wgExternalRedirectNsIDs, $wgExternalRedirectPages, $wgExternalRedirectURLRegex, $wgExternalRedirectDeniedShowURL;
+    $parser->getOutput()->updateCacheExpiry(0);
+    if(!wfParseUrl($url) || strpos($url, chr(13))!==false || strpos($url, chr(10))!==false || strpos($url, chr(0))!==false) {
         return wfMessage('externalredirect-invalidurl')->text();
     }
-    if(in_array($parser->getTitle()->getNamespace(), $wgExternalRedirectNsIDs, true) 
-      || in_array($parser->getTitle()->getPrefixedText(), $wgExternalRedirectPages, true)) {
+    if((in_array($parser->getTitle()->getNamespace(), $wgExternalRedirectNsIDs, true) 
+      || in_array($parser->getTitle()->getPrefixedText(), $wgExternalRedirectPages, true))
+      && ($wgExternalRedirectURLRegex==='' || preg_match($wgExternalRedirectURLRegex, $url)===1)) {
         header('Location: '.$url);
         return wfMessage('externalredirect-text', $url)->text();
     } else {
