@@ -27,7 +27,7 @@ $wgExtensionCredits[ 'parserhook' ][] = array(
     'author' => 'Davis Mosenkovs',
     'url' => 'https://www.mediawiki.org/wiki/Extension:ExternalRedirect',
     'description' => 'Allows to make redirects to external websites',
-    'version' => '1.2.0',
+    'version' => '1.2.1',
 );
 
 $wgExtensionMessagesFiles['ExternalRedirect'] = dirname( __FILE__ ) . '/ExternalRedirect.i18n.php';
@@ -54,7 +54,7 @@ function wfExternalRedirectParserInit( Parser $parser ) {
 }
 
 function wfExternalRedirectRender($parser, $url = '') {
-    global $wgExternalRedirectNsIDs, $wgExternalRedirectPages, $wgExternalRedirectURLRegex, $wgExternalRedirectDeniedShowURL;
+    global $wgCommandLineMode, $wgExternalRedirectNsIDs, $wgExternalRedirectPages, $wgExternalRedirectURLRegex, $wgExternalRedirectDeniedShowURL;
     $parser->getOutput()->updateCacheExpiry(0);
     if(!wfParseUrl($url) || strpos($url, chr(13))!==false || strpos($url, chr(10))!==false || strpos($url, chr(0))!==false) {
         return wfMessage('externalredirect-invalidurl')->text();
@@ -62,7 +62,9 @@ function wfExternalRedirectRender($parser, $url = '') {
     if((in_array($parser->getTitle()->getNamespace(), $wgExternalRedirectNsIDs, true) 
       || in_array($parser->getTitle()->getPrefixedText(), $wgExternalRedirectPages, true))
       && ($wgExternalRedirectURLRegex==='' || preg_match($wgExternalRedirectURLRegex, $url)===1)) {
-        header('Location: '.$url);
+        if($wgCommandLineMode!==true) {
+            header('Location: '.$url);
+        }
         return wfMessage('externalredirect-text', $url)->text();
     } else {
         return wfMessage('externalredirect-denied')->text().($wgExternalRedirectDeniedShowURL 
