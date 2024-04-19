@@ -1,0 +1,33 @@
+{
+	"name": "ExternalRedirect",
+	"version": "2.0.3",
+	"author": [
+		"Davis Mosenkovs",
+		"Alexander Gesinn (gesinn.it GmbH & Co. KG)",
+		"Luke Eversfield (gesinn.it GmbH & Co. KG)"
+	],
+	"url": "https://github.com/gesinn-it/ExternalRedirect",
+	"descriptionmsg": "idprovider-desc",
+	"license-name": "MIT",
+	"type": "other",
+	"requires": {
+		"MediaWiki": ">= 1.27"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\ExternalRedirect\\": "src/"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": [
+			"MediaWiki\\Extension\\ExternalRedirect\\ExternalRedirect::wfExternalRedirectParserInit"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"ExternalRedirectMessages": "ExternalRedirect.i18n.php"
+	},
+	"MessagesDirs": {
+		"ExternalRedirect": [
+			"i18n"
+		]
+	},
+	"manifest_version": 1
+}

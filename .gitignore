@@ -1,0 +1,11 @@
+## Directory-based ignores
+.idea/
+vendor/
+node_modules/
+
+## File based ignores
+composer.phar
+composer.lock
+*.cache
+docker-compose.override*
+.env
