@@ -34,7 +34,7 @@ namespace MediaWiki\Extension\ExternalRedirect;
 // $wgExtensionMessagesFiles['ExternalRedirect'] = dirname( __FILE__ ) . '/ExternalRedirect.i18n.php';
 
 
-
+use Parser;
 $wgHooks['ParserFirstCallInit'][] = 'wfExternalRedirectParserInit';
 
 
@@ -42,16 +42,16 @@ class ExternalRedirect {
 
     /*** Default configuration ***/
     // Array with NUMERIC namespace IDs where external redirection should be allowed.
-    $wgExternalRedirectNsIDs = array();
+    private $wgExternalRedirectNsIDs = array();
 
     // Better avoid. Array with page names (see magic word {{FULLPAGENAME}}) where external redirection should be allowed.
-    $wgExternalRedirectPages = array();
+    private $wgExternalRedirectPages = array();
 
     // Avoid or be extremely careful. Use whitelisting approach and very precise expressions. PCRE regex used to determine whether redirection to particular target URL is allowed.
-    $wgExternalRedirectURLRegex = '';
+    private $wgExternalRedirectURLRegex = '';
 
     // Whether to display link to redirection URL (along with error message) in case externalredirect is used where it is not allowed.
-    $wgExternalRedirectDeniedShowURL = false;
+    private $wgExternalRedirectDeniedShowURL = false;
     /*****************************/
     
     public static function wfExternalRedirectParserInit( Parser $parser ) {

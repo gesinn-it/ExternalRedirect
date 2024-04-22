@@ -7,7 +7,7 @@
 		"Luke Eversfield (gesinn.it GmbH & Co. KG)"
 	],
 	"url": "https://github.com/gesinn-it/ExternalRedirect",
-	"descriptionmsg": "idprovider-desc",
+	"descriptionmsg": "externalredirect-desc",
 	"license-name": "MIT",
 	"type": "other",
 	"requires": {
