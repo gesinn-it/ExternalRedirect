@@ -19,24 +19,9 @@
  */
 
 namespace MediaWiki\Extension\ExternalRedirect;
-
-
-
-// $wgExtensionCredits[ 'parserhook' ][] = array(
-//     'path' => __FILE__,
-//     'name' => 'ExternalRedirect',
-//     'author' => 'Davis Mosenkovs',
-//     'url' => 'https://www.mediawiki.org/wiki/Extension:ExternalRedirect',
-//     'description' => 'Allows to make redirects to external websites',
-//     'version' => '1.2.1',
-// );
-
-// $wgExtensionMessagesFiles['ExternalRedirect'] = dirname( __FILE__ ) . '/ExternalRedirect.i18n.php';
-
-
 use Parser;
-$wgHooks['ParserFirstCallInit'][] = 'wfExternalRedirectParserInit';
 
+$wgHooks['ParserFirstCallInit'][] = 'wfExternalRedirectParserInit';
 
 class ExternalRedirect {
 
@@ -65,9 +50,8 @@ class ExternalRedirect {
         if(!wfParseUrl($url) || strpos($url, chr(13))!==false || strpos($url, chr(10))!==false || strpos($url, chr(0))!==false) {
             return wfMessage('externalredirect-invalidurl')->text();
         }
-        if((in_array($parser->getTitle()->getNamespace(), $wgExternalRedirectNsIDs, true) 
-          || in_array($parser->getTitle()->getPrefixedText(), $wgExternalRedirectPages, true))
-          && ($wgExternalRedirectURLRegex==='' || preg_match($wgExternalRedirectURLRegex, $url)===1)) {
+        if((in_array($parser->getTitle()->getNamespace(), $wgExternalRedirectNsIDs, true) || in_array($parser->getTitle()->getPrefixedText(), $wgExternalRedirectPages, true))
+          && (is_null($wgExternalRedirectURLRegex) || preg_match($wgExternalRedirectURLRegex, $url)===1)) {
             if($wgCommandLineMode!==true) {
                 header('Location: '.$url);
             }
